@@ -1,10 +1,10 @@
 # lock_view
-[![pub package](https://img.shields.io/pub/v/lock_view.svg)](https://pub.dartlang.org/packages/lock_view)
+[![pub package](https://img.shields.io/pub/v/page_transition_view.svg)](https://pub.dartlang.org/packages/page_transition_view)
 
-LockView - Is used to create classical LockView of 9x9 pattern. Can also used to create any custom pattern.
+PageTransitionView - Used To Create PageView With Page Transition Effects.
 
 ## preview
-<img src="https://raw.githubusercontent.com/RutvikRana/lock_view/main/lock_view/video_example/giffy.gif" alt="Example App" width="300" height="400">
+<img src="https://raw.githubusercontent.com/RutvikRana/page_transition_view/video_example/giffy.gif" alt="Example App" width="300" height="450">
 
 ## Installation
 Follow Installation guide of Pub.dev
