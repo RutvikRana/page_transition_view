@@ -1,79 +1,98 @@
-# lock_view
+# page_transition_view
 [![pub package](https://img.shields.io/pub/v/page_transition_view.svg)](https://pub.dartlang.org/packages/page_transition_view)
 
 PageTransitionView - Used To Create PageView With Page Transition Effects.
 
 ## preview
-<img src="https://raw.githubusercontent.com/RutvikRana/page_transition_view/tree/main/video_example/giffy.gif" alt="Example App" width="300" height="450">
+<img src="https://raw.githubusercontent.com/RutvikRana/page_transition_view/main/video_example/giffy.gif" alt="Example App" width="300" height="450">
 
 ## Installation
 Follow Installation guide of Pub.dev
 
 ## Syntax
 
-      LockView({
-            this.width,                                                        //Width
-            this.height,                                                       //Height
-            this.password,                                                     //Password ex,[0,1,2,4,6,7,8] for Z pattern
-            this.gridNumber = 3,                                               //GridNumber Default 3 means 3x3
-            this.lineWidth = 5,                                                //Width Of Follow-Line                                                     
-            this.circleRadius = 0.15,                                          //Radius Of Circles
-            this.borderColor = Colors.black,                                   //BorderColor Of Circle
-            this.normalColor = Colors.white,                                   //NormalColor Of Circle
-            this.correctColor = Colors.green,                                  //Color When Unlocked
-            this.incorrectColor = Colors.red,                                  //Color When Wrong Guess
-            this.passColor = Colors.blue,                                      //Color When Circles Selected
-            this.background = const BoxDecoration(                             //Background Decoration
-                  color: Colors.white, 
-                  boxShadow: [BoxShadow(blurRadius: 10)],
-                  borderRadius: BorderRadius.all(Radius.circular(20))),
-            this.lineDecoration=const BoxDecoration(                            //Line Decoration
-                  color: Colors.grey,
-                  boxShadow: [BoxShadow(blurRadius: 10)]),
-            this.onEndPattern,                                                  //Called When DragEnd
-            this.takePattern = false,                                           //Want To Take Pattern Instead?
-            this.onEndTakePattern                                               //Called When DragEnd and takePattern=true
-          });
+      PageTransitionView({
+            this.toPrev,                                     //What To Do On Previous Page?
+            this.toNext,                                     //What To Do On Next Page?
+            this.direction = 0,                              //Direction Of Transition. 1 = Next, -1 = Prev, 0 = Both
+            this.scale = const Offset(1.0,1.0),              //Fixed Initial Scale Of Pages
+            this.offset = const Offset(0.0,0.0),             //Fixed Initial Position Of Pages
+            this.rotation = const Rotation(0.0,              //Fixed Initial Rotation Of Pages
+                  axis: Vec3(0, 0, 1)),
 
-**Note**: When takePattern = true, LockView Will Not Be Cleared After DragEnd, For Clear It, Change It By Parent SetState((){}) Callback.
+            this.key,                                        // All PageView Options...             
+            this.scrollDirection = Axis.horizontal, 
+            this.reverse = false, 
+            this.controller,
+            this.physics, 
+            this.pageSnapping: true, 
+            this.onPageChanged, 
+            this.itemBuilder, 
+            this.itemCount, 
+            this.dragStartBehavior = DragStartBehavior.start, 
+            this.allowImplicitScrolling = false,
 
+      });
+
+## How To Do?
+
+1. Set Initial Scale, Offset, Rotation. (Optional)
+   This Will Apply To Every Pages.
+2. Set The Direction Of Transition (Optional, Default is 0 means BiDirectional)
+3. 
+```
+      toPrev / toNext : (extra, scale, offset, rotation){
+      //extra is Transition Factor... range from (0,1)..... 0 = Page Transition Start, 1 = Transition End ( Changed To New Page )
+      //scale, offset, rotation Are RealTime Values of Page Transformation. Usually We Dont Need To Use It.
+            
+      //Now Make Changes In Transformation.
+      scale = Offset(1.0, 1.0) * extra;
+            
+      //return Changed Values as List.
+      return [scale, offset, rotation];
+      }
+ ```
+4. Use toNext For Direction = 1, toPrev For Direction = -1, Both For Direction = 0. If You Leave Both Null Then Default Scale Transition Occurs.
 
 ## Example
 ```
 class _HomeState extends State<Home> {
-  bool unlock = false;
+  List<Color> colors = [Colors.red,Colors.pink,Colors.yellow,Colors.blue,Colors.green];
+
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      appBar: AppBar(title: Text("LockView Example"),),
-      body: Center(
-        child:
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-            Padding(padding: EdgeInsets.only(bottom: 30),child: SizedBox(height: 50,child: FittedBox(child: Text(unlock?"UnLocked":"Locked")))),
-            
-            LockView(
-                  height: 300,
-                  width: 300,
-                  password: [0,1,2,4,6,7,8],
-                  onEndPattern: (didUnlocked) {
-                        setState(() {
-                          unlock = didUnlocked;
-                        });
-                         if(didUnlocked){
-                         Navigator.push(context, MaterialPageRoute(builder: (c)=>Scaffold(
-                              appBar: AppBar(title: Text("Unlocked Content"),),
-                              body: Center(child: Text("Unlocked",style: TextStyle(fontSize: 30),),),)));
-                    }
-                  },
-            )],
-          )
-      )
+      appBar: AppBar(title: Text("PageTransitionView Example"),),
+      body: Container(
+        color: Colors.black,
+        child: PageTransitionView(
+          direction: 0,
+          toNext: (extra, scale, offset, rotation) {
+            scale = Offset(1.0,1.0) * (extra);
+            offset = Offset(500.0,700.0) * (1-extra);
+            rotation = Rotation(2*pi*(1-extra));
+            return [scale,offset,rotation];
+          },
+          toPrev: (extra, scale, offset, rotation) {
+            scale = Offset(1.0,1.0) * (extra);
+            offset = Offset(-500.0,-700.0) * (1-extra);
+            rotation = Rotation(2*pi*extra);
+            return [scale,offset,rotation];
+          },
+          itemCount: 10,
+          itemBuilder: (c,index){
+            return Container(
+                  color: colors[index%colors.length],
+                  child: Center(
+                        child: SizedBox(width: 100,height: 100,
+                              child: FittedBox(
+                                    child: Text("$index")),),));
+            },
+          ),
+        ),
     );
   }
-```
+ ```
 
 ## Contact Me
 
