@@ -4,7 +4,7 @@
 PageTransitionView - Used To Create PageView With Page Transition Effects.
 
 ## preview
-<img src="https://raw.githubusercontent.com/RutvikRana/page_transition_view/video_example/giffy.gif" alt="Example App" width="300" height="450">
+<img src="https://raw.githubusercontent.com/RutvikRana/page_transition_view/tree/main/video_example/giffy.gif" alt="Example App" width="300" height="450">
 
 ## Installation
 Follow Installation guide of Pub.dev
